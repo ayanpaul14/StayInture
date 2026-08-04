@@ -1,28 +1,9 @@
 const nodemailer = require("nodemailer");
 
-// Uses Resend API if RESEND_API_KEY is set (recommended for production / Render free tier,
-// since Render blocks outbound SMTP). Falls back to nodemailer + Gmail SMTP for local dev.
-let transporter = null;
-
-function getTransporter() {
-  if (transporter) return transporter;
-
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false, // STARTTLS (works where port 465/SSL is blocked)
-    requireTLS: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
-  return transporter;
-}
+// Priority order:
+// 1. Brevo HTTP API  (BREVO_API_KEY) – works on Render free tier, no domain needed
+// 2. Resend HTTP API (RESEND_API_KEY) – works on Render free tier, needs verified domain
+// 3. Nodemailer/SMTP (EMAIL_USER + EMAIL_PASS) – local dev only (Render blocks SMTP ports)
 
 async function sendOtpEmail(toEmail, code) {
   const html = `
@@ -34,28 +15,65 @@ async function sendOtpEmail(toEmail, code) {
     </div>
   `;
 
-  // --- Resend (preferred: works on Render free tier) ---
+  // ── 1. Brevo (recommended for Render free tier) ──────────────────────────
+  if (process.env.BREVO_API_KEY) {
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "accept": "application/json",
+        "api-key": process.env.BREVO_API_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: {
+          name: "StayInture",
+          email: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+        },
+        to: [{ email: toEmail }],
+        subject: `${code} is your StayInture verification code`,
+        htmlContent: html,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.message || `Brevo error ${response.status}`);
+    }
+    return;
+  }
+
+  // ── 2. Resend (needs verified sending domain) ────────────────────────────
   if (process.env.RESEND_API_KEY) {
     const { Resend } = require("resend");
     const resend = new Resend(process.env.RESEND_API_KEY);
-
     const { error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || "StayInture <onboarding@resend.dev>",
+      from: "StayInture <onboarding@resend.dev>",
       to: toEmail,
       subject: `${code} is your StayInture verification code`,
       html,
     });
-
     if (error) throw new Error(error.message);
     return;
   }
 
-  // --- Nodemailer / Gmail SMTP fallback (local dev) ---
+  // ── 3. Nodemailer / Gmail SMTP (local dev fallback) ──────────────────────
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error("No email provider configured. Set RESEND_API_KEY or EMAIL_USER/EMAIL_PASS.");
+    throw new Error("No email provider configured. Set BREVO_API_KEY, RESEND_API_KEY, or EMAIL_USER/EMAIL_PASS.");
   }
 
-  await getTransporter().sendMail({
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    tls: { rejectUnauthorized: false },
+  });
+
+  await transporter.sendMail({
     from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
     to: toEmail,
     subject: `${code} is your StayInture verification code`,
