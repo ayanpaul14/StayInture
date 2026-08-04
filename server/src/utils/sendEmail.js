@@ -9,11 +9,15 @@ function getTransporter() {
 
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure: true,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: false, // STARTTLS (works where port 465/SSL is blocked)
+    requireTLS: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
