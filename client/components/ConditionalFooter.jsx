@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Footer from "./Footer";
+import Footer from "./footer";
 
 // Pages that manage their own full-height layout shouldn't also have the
 // marketing footer competing for vertical space underneath them - that's
