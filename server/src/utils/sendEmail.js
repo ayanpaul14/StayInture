@@ -1,8 +1,7 @@
 const nodemailer = require("nodemailer");
 
-// Uses Gmail SMTP by default (free, works with an App Password - see
-// .env.example for setup notes). Swap the transporter config below if you
-// move to a different provider (Resend, Brevo, SES, etc.) later.
+// Uses Resend API if RESEND_API_KEY is set (recommended for production / Render free tier,
+// since Render blocks outbound SMTP). Falls back to nodemailer + Gmail SMTP for local dev.
 let transporter = null;
 
 function getTransporter() {
@@ -22,10 +21,6 @@ function getTransporter() {
 }
 
 async function sendOtpEmail(toEmail, code) {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error("EMAIL_USER/EMAIL_PASS not configured in .env");
-  }
-
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 420px; margin: auto;">
       <h2 style="color:#2F5233;">StayInture</h2>
@@ -34,6 +29,27 @@ async function sendOtpEmail(toEmail, code) {
       <p style="color:#666; font-size: 13px;">This code expires in 5 minutes. If you didn't request this, you can ignore this email.</p>
     </div>
   `;
+
+  // --- Resend (preferred: works on Render free tier) ---
+  if (process.env.RESEND_API_KEY) {
+    const { Resend } = require("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    const { error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM || "StayInture <onboarding@resend.dev>",
+      to: toEmail,
+      subject: `${code} is your StayInture verification code`,
+      html,
+    });
+
+    if (error) throw new Error(error.message);
+    return;
+  }
+
+  // --- Nodemailer / Gmail SMTP fallback (local dev) ---
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error("No email provider configured. Set RESEND_API_KEY or EMAIL_USER/EMAIL_PASS.");
+  }
 
   await getTransporter().sendMail({
     from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
