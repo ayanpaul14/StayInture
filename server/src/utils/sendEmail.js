@@ -37,6 +37,9 @@ async function sendOtpEmail(toEmail, code) {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
+      console.error("[Brevo] HTTP status:", response.status);
+      console.error("[Brevo] Error response:", JSON.stringify(err));
+      console.error("[Brevo] API key (first 20 chars):", process.env.BREVO_API_KEY?.slice(0, 20));
       throw new Error(err.message || `Brevo error ${response.status}`);
     }
     return;
