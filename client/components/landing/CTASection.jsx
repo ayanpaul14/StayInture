@@ -5,7 +5,7 @@ import MagneticButton from "./MagneticButton";
 
 export default function CTASection() {
   return (
-    <section className="bg-teal-950 text-white py-20 relative overflow-hidden">
+    <section className="bg-teal-950/60 backdrop-blur-md text-white py-20 relative overflow-hidden">
       <div className="mx-auto max-w-6xl px-5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -26,10 +26,10 @@ export default function CTASection() {
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          <h2 className="relative font-head text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="relative font-head text-2xl sm:text-3xl font-bold text-white drop-shadow-md">
             Ready to find your next place?
           </h2>
-          <p className="relative mx-auto mt-3 max-w-md text-sm text-teal-100/90">
+          <p className="relative mx-auto mt-3 max-w-md text-sm text-teal-100/90 drop-shadow">
             Or list yours in a few minutes — same account, no separate signup required.
           </p>
           <div className="relative mt-7 flex flex-wrap justify-center gap-3">

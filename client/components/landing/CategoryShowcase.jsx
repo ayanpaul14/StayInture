@@ -33,10 +33,7 @@ const categories = [
 
 export default function CategoryShowcase() {
   return (
-    <section className="bg-teal-950 text-white border-t border-white/10 py-20 relative overflow-hidden">
-      {/* Background Ambient Glow */}
-      <div className="pointer-events-none absolute -left-20 top-1/2 h-72 w-72 rounded-full bg-teal-800/30 blur-3xl" />
-      
+    <section className="bg-teal-950/60 backdrop-blur-md text-white border-t border-white/10 py-20 relative overflow-hidden">
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
@@ -48,12 +45,12 @@ export default function CategoryShowcase() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.5 }}
-              className="font-head text-2xl sm:text-3xl font-bold text-white mt-1"
+              className="font-head text-2xl sm:text-3xl font-bold text-white mt-1 drop-shadow-md"
             >
               Three ways to find your place
             </motion.h2>
           </div>
-          <p className="text-xs sm:text-sm text-teal-200 max-w-sm">
+          <p className="text-xs sm:text-sm text-teal-200 max-w-sm drop-shadow">
             Discover verified flats, bungalows, and PG accommodations around your 1–3km radius.
           </p>
         </div>
@@ -103,7 +100,7 @@ function TiltCard({ category: c, index: i }) {
         rotateY: springRotateY,
         transformStyle: "preserve-3d",
       }}
-      className="rounded-2xl bg-teal-900/40 border border-white/15 p-6 shadow-2xl backdrop-blur-xl transition-colors hover:border-coral-400/40 hover:bg-teal-900/60 will-change-transform flex flex-col justify-between"
+      className="rounded-2xl bg-teal-900/50 border border-white/20 p-6 shadow-2xl backdrop-blur-xl transition-colors hover:border-coral-400/40 hover:bg-teal-900/70 will-change-transform flex flex-col justify-between"
     >
       <div>
         <span className={`inline-block rounded-full border px-3 py-1 text-xs font-semibold backdrop-blur-md ${c.tone}`}>

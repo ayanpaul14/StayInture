@@ -10,7 +10,6 @@ import {
 } from "framer-motion";
 import MagneticButton from "./MagneticButton";
 import TypewriterSearch from "./TypewriterSearch";
-import HeroDiscoveryHub from "./HeroDiscoveryHub";
 
 const headline = "Find a place to call home.";
 
@@ -43,12 +42,9 @@ export default function Hero() {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       style={{ scale: heroScale, opacity: heroOpacity }}
-      className="relative overflow-hidden bg-teal-950 px-5 pb-16 pt-14 text-white sm:pb-24 sm:pt-20 lg:pb-32 lg:pt-24 min-h-[640px] lg:min-h-[720px] flex items-center"
+      className="relative overflow-hidden bg-transparent px-5 pb-16 pt-14 text-white sm:pb-24 sm:pt-20 lg:pb-32 lg:pt-24 min-h-[640px] lg:min-h-[720px] flex items-center"
     >
-      <div className="xid-grain z-10 pointer-events-none" />
-
-      {/* FULL-SCREEN 3D WEBGL BACKGROUND CANVAS */}
-      <HeroDiscoveryHub />
+      <div className="xid-grain pointer-events-none" />
 
       {/* cursor spotlight */}
       <motion.div

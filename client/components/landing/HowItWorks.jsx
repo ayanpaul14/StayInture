@@ -28,10 +28,7 @@ export default function HowItWorks() {
   });
 
   return (
-    <section className="bg-teal-950/90 text-white border-y border-white/10 py-20 relative overflow-hidden">
-      {/* Background Ambient Glow */}
-      <div className="pointer-events-none absolute -right-20 top-1/3 h-80 w-80 rounded-full bg-coral-600/20 blur-3xl" />
-
+    <section className="bg-teal-950/50 backdrop-blur-md text-white border-y border-white/10 py-20 relative overflow-hidden">
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
@@ -43,12 +40,12 @@ export default function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.5 }}
-              className="font-head text-2xl sm:text-3xl font-bold text-white mt-1"
+              className="font-head text-2xl sm:text-3xl font-bold text-white mt-1 drop-shadow-md"
             >
               How StayInture works
             </motion.h2>
           </div>
-          <p className="text-xs sm:text-sm text-teal-200 max-w-sm">
+          <p className="text-xs sm:text-sm text-teal-200 max-w-sm drop-shadow">
             From smart radius search to direct host messaging and listing your own place.
           </p>
         </div>
@@ -56,7 +53,7 @@ export default function HowItWorks() {
         <div ref={containerRef} className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr]">
           {/* Sticky image panel — desktop only, ≥lg */}
           <div className="hidden lg:block">
-            <div className="sticky top-28 rounded-2xl bg-teal-900/60 border border-white/15 p-6 shadow-2xl backdrop-blur-xl">
+            <div className="sticky top-28 rounded-2xl bg-teal-900/70 border border-white/20 p-6 shadow-2xl backdrop-blur-xl">
               <motion.div
                 key={activeStep}
                 initial={{ opacity: 0, scale: 0.92 }}
@@ -110,7 +107,7 @@ export default function HowItWorks() {
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.5 }}
                   animate={{ opacity: i === activeStep ? 1 : 0.6, scale: i === activeStep ? 1 : 0.98 }}
-                  className="relative flex items-center gap-4 rounded-2xl bg-teal-900/40 border border-white/15 p-5 shadow-xl backdrop-blur-xl transition hover:bg-teal-900/60 sm:pl-14"
+                  className="relative flex items-center gap-4 rounded-2xl bg-teal-900/50 border border-white/20 p-5 shadow-2xl backdrop-blur-xl transition hover:bg-teal-900/70 sm:pl-14"
                 >
                   <span
                     className={`absolute left-3 top-6 hidden h-4 w-4 rounded-full border-2 border-white/40 sm:block ${
