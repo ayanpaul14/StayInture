@@ -26,7 +26,7 @@ function ControlsAndCamera({ roomMode }) {
     controls.dampingFactor = 0.05;
     controls.maxPolarAngle = Math.PI / 2.15;
     controls.minDistance = 3.5;
-    controls.maxDistance = 24;
+    controls.maxDistance = 28;
     controlsRef.current = controls;
 
     return () => controls.dispose();
@@ -50,6 +50,8 @@ function ControlsAndCamera({ roomMode }) {
 }
 
 export default function SplineMiniHome3D({ activeRoom = "all", isNight = false }) {
+  const bgColor = isNight ? "#090D16" : "#5DA63C";
+
   return (
     <div className="relative w-full h-full select-none">
       <Canvas
@@ -57,8 +59,10 @@ export default function SplineMiniHome3D({ activeRoom = "all", isNight = false }
         dpr={[1, 2]}
         camera={{ position: [9.5, 10.5, 9.5], fov: 38 }}
         gl={{ antialias: true, alpha: false }}
-        style={{ background: isNight ? "#090D16" : "#5DA63C" }}
       >
+        {/* Dynamic Canvas Clear Background Color */}
+        <color attach="background" args={[bgColor]} />
+
         <ControlsAndCamera roomMode={activeRoom} />
 
         {/* LIGHTING SETUP */}
@@ -87,9 +91,9 @@ export default function SplineMiniHome3D({ activeRoom = "all", isNight = false }
         {/* 3D SCENE MODELING */}
         <group position={[0, -0.5, 0]}>
           
-          {/* 1. EXPANDED GREEN LAWN BASE */}
+          {/* 1. EXPANDED MASSIVE GROUND LAWN SLAB (FULL SCREEN COVERAGE) */}
           <mesh receiveShadow position={[0, -0.2, 0]}>
-            <boxGeometry args={[20, 0.4, 18]} />
+            <boxGeometry args={[140, 0.4, 140]} />
             <meshStandardMaterial color={isNight ? "#0F172A" : "#62B33D"} roughness={0.7} />
           </mesh>
 
