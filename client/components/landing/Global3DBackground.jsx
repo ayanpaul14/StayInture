@@ -14,15 +14,15 @@ export default function Global3DBackground() {
 
   return (
     <>
-      {/* 1. PERSISTENT FIXED 3D WEBGL CANVAS BACKGROUND LAYER */}
-      <div className="fixed inset-0 w-full h-full -z-10 overflow-hidden pointer-events-auto">
+      {/* 1. PERSISTENT FIXED 3D WEBGL CANVAS BACKGROUND LAYER (Z-0) */}
+      <div className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-auto">
         <SplineMiniHome3D activeRoom={activeRoom} isNight={isNight} />
 
-        {/* Global Ambient Gradient Overlay for Readability */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-teal-950/80 via-teal-950/40 to-teal-950/85" />
+        {/* Light Vignette Ambient Overlay for Text Readability */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-teal-950/40 via-transparent to-teal-950/50" />
       </div>
 
-      {/* 2. FIXED FLOATING ROOM NAVBAR (PAGE-WIDE ACCESSIBLE) */}
+      {/* 2. FIXED FLOATING ROOM NAVBAR (PAGE-WIDE ACCESSIBLE Z-30) */}
       <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-auto w-full max-w-2xl px-3">
         <div className="flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto py-2 px-3.5 rounded-2xl bg-teal-950/85 border border-white/20 backdrop-blur-2xl shadow-2xl no-scrollbar">
           {[

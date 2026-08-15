@@ -6,15 +6,17 @@ import Global3DBackground from "../components/landing/Global3DBackground";
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-teal-950 text-white">
-      {/* PERSISTENT FIXED 3D CANVAS BACKGROUND */}
+    <div className="relative min-h-screen text-white overflow-hidden">
+      {/* PERSISTENT 3D CANVAS BACKGROUND (Z-0) */}
       <Global3DBackground />
 
-      {/* LANDING SECTIONS FLOATING TRANSPARENTLY OVER THE 3D BACKGROUND */}
-      <Hero />
-      <CategoryShowcase />
-      <HowItWorks />
-      <CTASection />
+      {/* LANDING SECTIONS FLOATING TRANSPARENTLY OVER THE 3D BACKGROUND (Z-10) */}
+      <div className="relative z-10">
+        <Hero />
+        <CategoryShowcase />
+        <HowItWorks />
+        <CTASection />
+      </div>
     </div>
   );
 }

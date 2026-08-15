@@ -33,7 +33,7 @@ const categories = [
 
 export default function CategoryShowcase() {
   return (
-    <section className="bg-teal-950/60 backdrop-blur-md text-white border-t border-white/10 py-20 relative overflow-hidden">
+    <section className="bg-teal-950/30 backdrop-blur-sm text-white border-t border-white/10 py-20 relative overflow-hidden">
       <div className="relative mx-auto max-w-6xl px-5">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
