@@ -17,7 +17,7 @@ const categories = [
     key: "bungalow",
     label: "Bungalow / Villa",
     desc: "Spacious private lawns, double-height lounge & luxury pool.",
-    tone: "bg-coral-500/20 text-coral-300 border-coral-400/30",
+    tone: "bg-blue-500/20 text-blue-300 border-blue-400/30",
     image: "/images/bungalow.jpg",
     specs: "Private Lawn · Pool & BBQ",
   },

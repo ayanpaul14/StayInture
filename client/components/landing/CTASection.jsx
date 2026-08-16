@@ -16,7 +16,7 @@ export default function CTASection() {
         >
           <div className="xid-grain" />
           <motion.div
-            className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-coral-600/40 blur-2xl"
+            className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-blue-600/40 blur-2xl"
             animate={{ x: [0, 16, -8, 0], y: [0, -10, 8, 0] }}
             transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -35,7 +35,7 @@ export default function CTASection() {
           <div className="relative mt-7 flex flex-wrap justify-center gap-3">
             <MagneticButton
               href="/explore"
-              className="inline-block rounded-full bg-coral-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-coral-600 hover:shadow-coral-500/25"
+              className="inline-block rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-blue-500 hover:to-indigo-500 hover:shadow-blue-500/30"
             >
               Start exploring
             </MagneticButton>

@@ -88,7 +88,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.08 * (headline.split(" ").length + 1) }}
-              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-coral-300 to-amber-400 font-extrabold drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-300 font-extrabold drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
             >
               Or list yours.
             </motion.span>
@@ -121,7 +121,7 @@ export default function Hero() {
           >
             <MagneticButton
               href="/explore"
-              className="inline-block rounded-full bg-coral-400 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-coral-600 hover:shadow-coral-500/25"
+              className="inline-block rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-blue-500 hover:to-indigo-500 hover:shadow-blue-500/30"
             >
               Explore nearby places
             </MagneticButton>
