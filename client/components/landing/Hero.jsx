@@ -65,13 +65,13 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-950/80 border border-white/20 px-3.5 py-1 text-xs font-semibold text-teal-100 backdrop-blur-xl shadow-lg"
+            className="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-950/90 border border-white/20 px-3.5 py-1 text-xs font-semibold text-teal-100 backdrop-blur-xl shadow-lg"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-coral-400" />
             Flat &middot; Bungalow &middot; PG — near you
           </motion.span>
 
-          <h1 className="font-head text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl drop-shadow-lg">
+          <h1 className="font-head text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
             {headline.split(" ").map((word, i) => (
               <motion.span
                 key={i}
@@ -88,7 +88,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.08 * (headline.split(" ").length + 1) }}
-              className="inline-block text-coral-400 font-extrabold"
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-coral-300 to-amber-400 font-extrabold drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
             >
               Or list yours.
             </motion.span>
@@ -98,7 +98,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="mt-4 max-w-md text-sm text-teal-100 sm:text-base drop-shadow"
+            className="mt-4 max-w-md text-sm font-medium text-white/90 sm:text-base drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed"
           >
             StayInture finds the closest Flat, Bungalow or PG around you — and if
             you've got a place of your own, you're one form away from listing it too.

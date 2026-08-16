@@ -10,6 +10,7 @@ const authRoutes = require("./src/routes/authRoutes");
 const propertyRoutes = require("./src/routes/propertyRoutes");
 const searchRoutes = require("./src/routes/searchRoutes");
 const conversationRoutes = require("./src/routes/conversationRoutes");
+const bookingRoutes = require("./src/routes/bookingRoutes");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/conversations", conversationRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // 404 fallback for unknown routes
 app.use((req, res) => res.status(404).json({ message: "Route not found" }));

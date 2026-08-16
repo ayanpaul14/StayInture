@@ -18,6 +18,11 @@ async function createProperty(req, res) {
     return res.status(400).json({ message: "Property location (longitude, latitude) is required" });
   }
 
+  const validPhotos = Array.isArray(photos) ? photos.filter((p) => typeof p === "string" && p.trim().length > 0) : [];
+  if (validPhotos.length === 0) {
+    return res.status(400).json({ message: "At least one property photo is required to publish a listing." });
+  }
+
   const property = await Property.create({
     host: req.user._id,
     category,

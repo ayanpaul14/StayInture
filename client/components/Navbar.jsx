@@ -37,8 +37,18 @@ export default function Navbar() {
             Explore
           </Link>
           {user && (
+            <Link href="/trips" className="hover:text-teal-600">
+              My Trips
+            </Link>
+          )}
+          {user && (
             <Link href="/messages" className="hover:text-teal-600">
               Messages
+            </Link>
+          )}
+          {user?.isHost && (
+            <Link href="/host/reservations" className="hover:text-teal-600">
+              Reservations
             </Link>
           )}
           {user?.isHost && (
@@ -110,6 +120,11 @@ export default function Navbar() {
               Explore
             </Link>
             {user && (
+              <Link href="/trips" className="py-1 text-ink/80" onClick={() => setMenuOpen(false)}>
+                My Trips
+              </Link>
+            )}
+            {user && (
               <Link href="/profile" className="py-1 text-ink/80" onClick={() => setMenuOpen(false)}>
                 Profile
               </Link>
@@ -117,6 +132,11 @@ export default function Navbar() {
             {user && (
               <Link href="/messages" className="py-1 text-ink/80" onClick={() => setMenuOpen(false)}>
                 Messages
+              </Link>
+            )}
+            {user?.isHost && (
+              <Link href="/host/reservations" className="py-1 text-ink/80" onClick={() => setMenuOpen(false)}>
+                Reservations
               </Link>
             )}
             {user?.isHost && (

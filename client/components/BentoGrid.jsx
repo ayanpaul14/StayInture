@@ -33,7 +33,7 @@ export default function BentoGrid({ properties, onWidenRadius, radiusKm }) {
               </button>
             )}
             <Link
-              href="/list-property"
+              href="/host/new"
               className="whitespace-nowrap rounded-full border border-black/10 px-4 py-2 text-xs font-semibold text-ink transition hover:bg-canvas"
             >
               List your property

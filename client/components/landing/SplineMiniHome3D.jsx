@@ -7,7 +7,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 // Camera positions & targets for centered room focus
 const ROOM_CAMERA_PRESETS = {
-  all: { pos: [9.5, 10.5, 9.5], target: [0, 0, 0] },
+  all: { pos: [9.5, 10.5, 9.5], target: [-3.2, 0, 1.2] },
   living: { pos: [3.5, 4.8, 4.8], target: [1.5, 0.5, 0.5] },
   kitchen: { pos: [-3.5, 5.2, 4.5], target: [-2, 0.5, -0.5] },
   bedroom: { pos: [4.5, 5.8, -3], target: [2.5, 0.5, -2] },

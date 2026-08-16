@@ -3,13 +3,17 @@
 import { usePathname } from "next/navigation";
 import Footer from "./Footer";
 
-// Pages that manage their own full-height layout shouldn't also have the
-// marketing footer competing for vertical space underneath them - that's
-// what was causing the "jumping" scroll on /messages.
-const HIDE_FOOTER_ON = ["/messages"];
+// Only show the footer on landing page (/), explore (/explore), and profile (/profile)
+const ALLOWED_FOOTER_PATHS = ["/", "/explore", "/profile"];
 
 export default function ConditionalFooter() {
   const pathname = usePathname();
-  if (HIDE_FOOTER_ON.some((p) => pathname?.startsWith(p))) return null;
+
+  const isAllowed = ALLOWED_FOOTER_PATHS.some((path) => {
+    if (path === "/") return pathname === "/";
+    return pathname?.startsWith(path);
+  });
+
+  if (!isAllowed) return null;
   return <Footer />;
 }

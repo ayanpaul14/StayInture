@@ -65,6 +65,26 @@ export const api = {
       body: { status, visitDate },
       auth: true,
     }),
+
+  // bookings
+  getAvailability: (propertyId) => request(`/bookings/availability/${propertyId}`),
+  createBooking: (payload) =>
+    request("/bookings", { method: "POST", body: payload, auth: true }),
+  getMyTrips: () => request("/bookings/my-trips", { auth: true }),
+  getHostReservations: () => request("/bookings/host-reservations", { auth: true }),
+  getBookingById: (id) => request(`/bookings/${id}`, { auth: true }),
+  updateBookingStatus: (id, status, cancellationReason) =>
+    request(`/bookings/${id}/status`, {
+      method: "PATCH",
+      body: { status, cancellationReason },
+      auth: true,
+    }),
+  payBooking: (id, paymentMethod) =>
+    request(`/bookings/${id}/pay`, {
+      method: "POST",
+      body: { paymentMethod },
+      auth: true,
+    }),
 };
 
 export function saveSession(token, user) {
