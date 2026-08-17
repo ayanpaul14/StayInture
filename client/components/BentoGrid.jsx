@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import PropertyCard from "./PropertyCard";
-import { DEMO_PROPERTIES } from "../lib/demoData";
 
 // Repeating 5-item pattern: one large tile, four regular tiles.
 // grid-flow-dense lets the smaller tiles fill in around the large one.
@@ -13,47 +12,51 @@ function spanFor(indexInPattern) {
 
 export default function BentoGrid({ properties, onWidenRadius, radiusKm }) {
   const hasReal = properties?.length > 0;
-  const list = hasReal ? properties : DEMO_PROPERTIES;
+
+  if (!hasReal) {
+    return (
+      <div className="flex flex-col items-center gap-3 py-14 text-center">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-ink/30">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+          <path d="M21 21l-4.3-4.3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M8 11h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+        <p className="text-sm font-semibold text-ink">Property not found</p>
+        <p className="max-w-xs text-xs text-ink/50">
+          We couldn&rsquo;t find any listings within {radiusKm} km that match your search.
+        </p>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+          {onWidenRadius && radiusKm < 3 && (
+            <button
+              onClick={onWidenRadius}
+              className="whitespace-nowrap rounded-full bg-teal-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-teal-800"
+            >
+              Widen radius to {Math.min(3, radiusKm + 0.5)} km
+            </button>
+          )}
+          <Link
+            href="/host/new"
+            className="whitespace-nowrap rounded-full border border-black/10 px-4 py-2 text-xs font-semibold text-ink transition hover:bg-canvas"
+          >
+            List your property
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      {!hasReal && (
-        <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-dashed border-black/10 bg-white/60 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold text-ink">No properties found within {radiusKm} km yet</p>
-            <p className="mt-0.5 text-xs text-ink/50">Showing sample listings below so you can see how it looks.</p>
+    <div className="grid auto-rows-[130px] grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+      {properties.map((p, i) => {
+        const patternIndex = i % 5;
+        const span = spanFor(patternIndex);
+        const size = patternIndex === 0 ? "lg" : "sm";
+        return (
+          <div key={p._id} className={span}>
+            <PropertyCard property={p} size={size} delay={i * 60} demo={false} />
           </div>
-          <div className="flex items-center gap-3">
-            {onWidenRadius && radiusKm < 3 && (
-              <button
-                onClick={onWidenRadius}
-                className="whitespace-nowrap rounded-full bg-teal-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-teal-800"
-              >
-                Widen radius to {Math.min(3, radiusKm + 0.5)} km
-              </button>
-            )}
-            <Link
-              href="/host/new"
-              className="whitespace-nowrap rounded-full border border-black/10 px-4 py-2 text-xs font-semibold text-ink transition hover:bg-canvas"
-            >
-              List your property
-            </Link>
-          </div>
-        </div>
-      )}
-
-      <div className="grid auto-rows-[130px] grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-        {list.map((p, i) => {
-          const patternIndex = i % 5;
-          const span = spanFor(patternIndex);
-          const size = patternIndex === 0 ? "lg" : "sm";
-          return (
-            <div key={p._id} className={span}>
-              <PropertyCard property={p} size={size} delay={i * 60} demo={!hasReal} />
-            </div>
-          );
-        })}
-      </div>
+        );
+      })}
     </div>
   );
 }

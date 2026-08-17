@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 import { api } from "../../lib/api";
 import CategoryChips from "../../components/CategoryChips";
 import RadiusSlider from "../../components/RadiusSlider";
@@ -13,17 +14,24 @@ import MapView from "../../components/MapView";
 const DEFAULT_COORDS = { lat: 22.5726, lng: 88.3639 };
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
   const [coords, setCoords] = useState(DEFAULT_COORDS);
   // Search waits for this to be true, so it only ever runs once we know
   // the REAL location - not once with the fallback and again with GPS.
   const [locationReady, setLocationReady] = useState(false);
   const [category, setCategory] = useState("");
   const [radiusKm, setRadiusKm] = useState(2);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(searchParams.get("q") || "");
   const [view, setView] = useState("list");
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Keep the search box in sync if the URL's ?q= changes -
+  // e.g. searching again from the homepage while already on /explore.
+  useEffect(() => {
+    setQuery(searchParams.get("q") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     if (!navigator.geolocation) {
