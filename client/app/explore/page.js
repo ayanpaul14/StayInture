@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { api } from "../../lib/api";
 import CategoryChips from "../../components/CategoryChips";
@@ -9,21 +10,33 @@ import BentoGrid from "../../components/BentoGrid";
 import SkeletonGrid from "../../components/SkeletonGrid";
 import SearchBar from "../../components/SearchBar";
 import MapView from "../../components/MapView";
+import QuickBookingModal from "../../components/booking/QuickBookingModal";
 
 const DEFAULT_COORDS = { lat: 22.5726, lng: 88.3639 };
 
-export default function HomePage() {
+function ExploreContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams ? searchParams.get("q") || "" : "";
+  const shouldFocus = searchParams ? searchParams.get("focus") === "true" || Boolean(initialQuery) : false;
+
   const [coords, setCoords] = useState(DEFAULT_COORDS);
   // Search waits for this to be true, so it only ever runs once we know
   // the REAL location - not once with the fallback and again with GPS.
   const [locationReady, setLocationReady] = useState(false);
   const [category, setCategory] = useState("");
   const [radiusKm, setRadiusKm] = useState(2);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [view, setView] = useState("list");
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [bookingProperty, setBookingProperty] = useState(null);
+
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+    }
+  }, [initialQuery]);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -65,7 +78,7 @@ export default function HomePage() {
   }, [locationReady, coords, category, radiusKm, query]);
 
   function widenRadius() {
-    setRadiusKm((r) => Math.min(3, r + 0.5));
+    setRadiusKm((r) => Math.min(25, r + 5));
   }
 
   return (
@@ -90,7 +103,7 @@ export default function HomePage() {
         transition={{ duration: 0.5, delay: 0.05 }}
         className="mb-4"
       >
-        <SearchBar value={query} onChange={setQuery} />
+        <SearchBar value={query} onChange={setQuery} autoFocus={shouldFocus} />
       </motion.section>
 
       <motion.section
@@ -133,11 +146,36 @@ export default function HomePage() {
         <SkeletonGrid />
       ) : view === "map" ? (
         <div className="h-[70vh] overflow-hidden rounded-2xl ring-1 ring-black/5 sm:h-[520px]">
-          <MapView center={coords} radiusKm={radiusKm} properties={properties} />
+          <MapView
+            center={coords}
+            radiusKm={radiusKm}
+            properties={properties}
+            onBookProperty={(p) => setBookingProperty(p)}
+          />
         </div>
       ) : (
-        <BentoGrid properties={properties} onWidenRadius={widenRadius} radiusKm={radiusKm} />
+        <BentoGrid
+          properties={properties}
+          onWidenRadius={widenRadius}
+          radiusKm={radiusKm}
+          onBookProperty={(p) => setBookingProperty(p)}
+        />
+      )}
+
+      {bookingProperty && (
+        <QuickBookingModal
+          property={bookingProperty}
+          onClose={() => setBookingProperty(null)}
+        />
       )}
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<SkeletonGrid />}>
+      <ExploreContent />
+    </Suspense>
   );
 }

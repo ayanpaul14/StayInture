@@ -66,21 +66,21 @@ export default function HostReservationsPage() {
   return (
     <div className="mx-auto max-w-5xl px-5 py-8">
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-head text-3xl font-bold text-ink">Host Reservations</h1>
           <p className="text-xs text-ink/60 mt-1">Review incoming booking requests and manage guest stays</p>
         </div>
         <Link
           href="/host/dashboard"
-          className="w-fit rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold text-ink/80 transition hover:bg-slate-50"
+          className="w-fit whitespace-nowrap rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold text-ink/80 transition hover:bg-slate-50"
         >
           ← Host Dashboard
         </Link>
       </div>
 
       {/* Overview Stats */}
-      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Pending Requests" value={pending.length} tone="amber" />
         <StatCard label="Confirmed Stays" value={confirmed.length} tone="teal" />
         <StatCard label="Total Reservations" value={reservations.length} tone="neutral" />
@@ -88,7 +88,7 @@ export default function HostReservationsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-2 border-b border-black/10 pb-3">
+      <div className="mb-6 flex gap-2 border-b border-black/10 pb-3 overflow-x-auto no-scrollbar py-1">
         <TabButton label="All" count={reservations.length} active={activeTab === "all"} onClick={() => setActiveTab("all")} />
         <TabButton label="Pending Action" count={pending.length} active={activeTab === "pending"} onClick={() => setActiveTab("pending")} />
         <TabButton label="Confirmed" count={confirmed.length} active={activeTab === "confirmed"} onClick={() => setActiveTab("confirmed")} />
@@ -140,7 +140,7 @@ function TabButton({ label, count, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
+      className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${
         active
           ? "bg-teal-600 text-white shadow-sm"
           : "bg-slate-100 text-ink/70 hover:bg-slate-200"

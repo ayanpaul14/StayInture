@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 const categories = [
@@ -57,7 +58,9 @@ export default function CategoryShowcase() {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3" style={{ perspective: 1000 }}>
           {categories.map((c, i) => (
-            <TiltCard key={c.key} category={c} index={i} />
+            <Link key={c.key} href={`/explore?category=${c.key}`}>
+              <TiltCard category={c} index={i} />
+            </Link>
           ))}
         </div>
       </div>

@@ -36,21 +36,21 @@ export default function HostDashboardPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-8">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-head text-2xl font-bold">Host Dashboard</h1>
           <p className="text-xs text-ink/50 mt-0.5">Manage your listings and reservations</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
           <Link
             href="/host/reservations"
-            className="rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold text-ink/80 transition hover:bg-slate-50"
+            className="whitespace-nowrap rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold text-ink/80 transition hover:bg-slate-50"
           >
             Reservations {pendingReservations > 0 && `(${pendingReservations})`}
           </Link>
           <Link
             href="/host/new"
-            className="rounded-full bg-coral-400 px-4 py-2 text-xs font-semibold text-white transition hover:bg-coral-600 shadow-sm"
+            className="whitespace-nowrap rounded-full bg-coral-400 px-4 py-2 text-xs font-semibold text-white transition hover:bg-coral-600 shadow-sm"
           >
             + New listing
           </Link>

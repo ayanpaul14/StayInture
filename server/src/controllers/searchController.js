@@ -6,11 +6,21 @@ const Property = require("../models/Property");
 async function searchProperties(req, res) {
   const { lat, lng, radiusKm = 2, category, minRent, maxRent, q } = req.query;
 
-  const query = { isActive: true };
+  const baseQuery = { isActive: true };
 
-  // Geo radius search only applies when we have coordinates (from the
-  // browser's geolocation). If lat/lng are missing but `q` is present,
-  // fall back to a plain text search with no distance sort.
+  if (category) baseQuery.category = category;
+  if (minRent || maxRent) {
+    baseQuery.rentPerMonth = {};
+    if (minRent) baseQuery.rentPerMonth.$gte = Number(minRent);
+    if (maxRent) baseQuery.rentPerMonth.$lte = Number(maxRent);
+  }
+  if (q) {
+    const regex = new RegExp(q.trim(), "i");
+    baseQuery.$or = [{ title: regex }, { city: regex }, { address: regex }];
+  }
+
+  let query = { ...baseQuery };
+
   if (lat && lng) {
     const radiusMeters = Number(radiusKm) * 1000;
     query.location = {
@@ -19,28 +29,35 @@ async function searchProperties(req, res) {
         $maxDistance: radiusMeters,
       },
     };
-  } else if (!q) {
-    return res.status(400).json({
-      message: "Provide lat and lng, or a search term (q)",
-    });
   }
 
-  if (category) query.category = category;
-  if (minRent || maxRent) {
-    query.rentPerMonth = {};
-    if (minRent) query.rentPerMonth.$gte = Number(minRent);
-    if (maxRent) query.rentPerMonth.$lte = Number(maxRent);
-  }
-  if (q) {
-    const regex = new RegExp(q.trim(), "i");
-    query.$or = [{ title: regex }, { city: regex }, { address: regex }];
+  let properties = [];
+  try {
+    properties = await Property.find(query).limit(50).populate("host", "name rating");
+  } catch (err) {
+    // If $near query fails or index missing, fall back to basic query
+    properties = await Property.find(baseQuery).sort({ createdAt: -1 }).limit(50).populate("host", "name rating");
   }
 
-  // $near already sorts by distance, closest first (when present)
-  const properties = await Property.find(query).limit(50).populate(
-    "host",
-    "name rating"
-  );
+  // If strict radius cutoff returned 0 properties, fall back to showing nearest active properties
+  if (properties.length === 0 && lat && lng) {
+    try {
+      const fallbackQuery = { ...baseQuery };
+      fallbackQuery.location = {
+        $near: {
+          $geometry: { type: "Point", coordinates: [Number(lng), Number(lat)] },
+        },
+      };
+      properties = await Property.find(fallbackQuery).limit(50).populate("host", "name rating");
+    } catch (err) {
+      properties = await Property.find(baseQuery).sort({ createdAt: -1 }).limit(50).populate("host", "name rating");
+    }
+  }
+
+  // Final fallback to ensure all listed properties are returned
+  if (properties.length === 0) {
+    properties = await Property.find(baseQuery).sort({ createdAt: -1 }).limit(50).populate("host", "name rating");
+  }
 
   res.json({ count: properties.length, properties });
 }

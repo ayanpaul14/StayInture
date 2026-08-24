@@ -258,13 +258,13 @@ export default function SplineMiniHome3D({ activeRoom = "all", isNight = false }
 /* Feature 1: Private Swimming Pool & Sun Deck */
 function SwimmingPoolArea({ isNight }) {
   return (
-    <group position={[-5.5, 0.05, 3]}>
+    <group position={[-3.8, 0.05, 3.2]}>
       <mesh receiveShadow position={[0, -0.05, 0]}>
-        <boxGeometry args={[4.2, 0.25, 3.2]} />
+        <boxGeometry args={[3.4, 0.25, 2.6]} />
         <meshStandardMaterial color="#0284C7" />
       </mesh>
       <mesh position={[0, 0.05, 0]}>
-        <boxGeometry args={[3.8, 0.02, 2.8]} />
+        <boxGeometry args={[3.0, 0.02, 2.2]} />
         <meshStandardMaterial
           color="#38BDF8"
           roughness={0.1}
@@ -274,17 +274,17 @@ function SwimmingPoolArea({ isNight }) {
           emissiveIntensity={isNight ? 0.6 : 0.2}
         />
       </mesh>
-      <group position={[2.5, 0.15, -0.6]}>
+      <group position={[2.0, 0.15, -0.6]}>
         <mesh castShadow position={[0, 0.1, 0]}>
-          <boxGeometry args={[0.6, 0.1, 1.4]} />
+          <boxGeometry args={[0.5, 0.1, 1.2]} />
           <meshStandardMaterial color="#F87171" />
         </mesh>
-        <mesh castShadow position={[0.5, 1.0, -0.4]}>
+        <mesh castShadow position={[0.4, 1.0, -0.4]}>
           <cylinderGeometry args={[0.04, 0.04, 2.0, 12]} />
           <meshStandardMaterial color="#E2E8F0" />
         </mesh>
-        <mesh castShadow position={[0.5, 1.9, -0.4]}>
-          <coneGeometry args={[1.0, 0.5, 8]} />
+        <mesh castShadow position={[0.4, 1.9, -0.4]}>
+          <coneGeometry args={[0.9, 0.45, 8]} />
           <meshStandardMaterial color="#F87171" />
         </mesh>
       </group>

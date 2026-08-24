@@ -2,8 +2,8 @@
 
 export default function RadiusSlider({ value, onChange }) {
   const min = 1;
-  const max = 3;
-  const pct = ((value - min) / (max - min)) * 100;
+  const max = 25;
+  const pct = Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
 
   return (
     <div className="flex min-w-[220px] items-center gap-3">
@@ -14,7 +14,7 @@ export default function RadiusSlider({ value, onChange }) {
         type="range"
         min={min}
         max={max}
-        step="0.5"
+        step="1"
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         style={{

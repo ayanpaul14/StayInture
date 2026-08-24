@@ -29,61 +29,10 @@ const VISIT_LABEL = {
   completed: { text: "Visit completed", tone: "bg-black/5 text-ink/50" },
 };
 
-// Hardcoded demo conversations - shown only when the real conversation
-// list is empty, so new signups don't land on a blank Messages page.
-// These never touch the backend; sending a message in one just appends
-// locally so the composer still feels alive.
-function buildDemoConversations() {
-  const now = Date.now();
-  const minsAgo = (m) => new Date(now - m * 60 * 1000).toISOString();
-
-  return [
-    {
-      _id: "demo-1",
-      isDemo: true,
-      otherName: "Priya Sharma",
-      property: { title: "Cozy 2BHK, Salt Lake" },
-      visitStatus: "confirmed",
-      messages: [
-        { fromMe: true, text: "Hi! Is the 2BHK still available?", createdAt: minsAgo(120) },
-        { fromMe: false, text: "Yes, available from next week", createdAt: minsAgo(115) },
-        { fromMe: true, text: "Great, can I book a visit?", createdAt: minsAgo(110) },
-        { fromMe: false, text: "Sure, how about this Saturday at 4pm?", createdAt: minsAgo(108) },
-      ],
-    },
-    {
-      _id: "demo-2",
-      isDemo: true,
-      otherName: "Rahul Basu",
-      property: { title: "1BHK PG, Newtown" },
-      visitStatus: "requested",
-      messages: [
-        { fromMe: true, text: "Is food really included in the rent?", createdAt: minsAgo(60) },
-        { fromMe: false, text: "Yes, breakfast and dinner both, veg and non-veg options.", createdAt: minsAgo(55) },
-        { fromMe: true, text: "Perfect, I'd like to book a visit please.", createdAt: minsAgo(50) },
-      ],
-    },
-    {
-      _id: "demo-3",
-      isDemo: true,
-      otherName: "Ananya Roy",
-      property: { title: "Bungalow, Rajarhat" },
-      visitStatus: "none",
-      messages: [
-        { fromMe: true, text: "Does the bungalow allow pets?", createdAt: minsAgo(20) },
-        { fromMe: false, text: "Yes, we're pet-friendly! Any breed restrictions on your side?", createdAt: minsAgo(17) },
-        { fromMe: true, text: "No restrictions, just a small dog.", createdAt: minsAgo(14) },
-        { fromMe: false, text: "That's perfectly fine, happy to have you visit anytime.", createdAt: minsAgo(12) },
-      ],
-    },
-  ];
-}
-
 export default function MessagesPage() {
   const { user, ready } = useAuth();
   const router = useRouter();
   const [conversations, setConversations] = useState([]);
-  const [demoConversations, setDemoConversations] = useState(buildDemoConversations);
   const [activeId, setActiveId] = useState(null);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(true);
@@ -99,15 +48,13 @@ export default function MessagesPage() {
       .then((res) => {
         const real = res.conversations || [];
         setConversations(real);
-        const list = real.length ? real : demoConversations;
-        if (list.length) setActiveId(list[0]._id);
+        if (real.length) setActiveId(real[0]._id);
       })
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, user, router]);
 
-  // Real conversations take priority - demos only show when there are none yet.
-  const displayConversations = conversations.length ? conversations : demoConversations;
+  const displayConversations = conversations;
   const active = displayConversations.find((c) => c._id === activeId);
   const myId = user?.id || user?._id;
 
@@ -119,26 +66,13 @@ export default function MessagesPage() {
     e.preventDefault();
     if (!draft.trim() || !active) return;
 
-    if (active.isDemo) {
-      // Demo threads never hit the backend - just append locally.
-      setDemoConversations((prev) =>
-        prev.map((c) =>
-          c._id === active._id
-            ? { ...c, messages: [...c.messages, { fromMe: true, text: draft, createdAt: new Date().toISOString() }] }
-            : c
-        )
-      );
-      setDraft("");
-      return;
-    }
-
     const res = await api.sendMessage(active._id, draft);
     setConversations((prev) => prev.map((c) => (c._id === active._id ? res.conversation : c)));
     setDraft("");
   }
 
   async function handleVisitAction(status) {
-    if (!active || active.isDemo) return; // no-op for demo threads
+    if (!active) return;
     const res = await api.updateVisit(active._id, status);
     setConversations((prev) => prev.map((c) => (c._id === active._id ? res.conversation : c)));
   }
@@ -187,8 +121,8 @@ export default function MessagesPage() {
                   return new Date(bLast || 0) - new Date(aLast || 0);
                 })
                 .map((c) => {
-                  const hostHere = !c.isDemo && String(c.host?._id || c.host) === String(myId);
-                  const otherName = c.isDemo ? c.otherName : (hostHere ? c.customer : c.host)?.name;
+                  const hostHere = String(c.host?._id || c.host) === String(myId);
+                  const otherName = (hostHere ? c.customer : c.host)?.name;
                   const lastMsg = c.messages?.[c.messages.length - 1];
                   return (
                     <button
@@ -249,39 +183,33 @@ export default function MessagesPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <p className="truncate text-sm font-semibold text-ink">{otherPartyName || "User"}</p>
-                    {active.isDemo && (
-                      <span className="rounded-full bg-black/5 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-ink/40">
-                        Demo
-                      </span>
-                    )}
                   </div>
                   <p className="truncate text-xs text-ink/50">{active.property?.title}</p>
                 </div>
 
-                {!active.isDemo &&
-                  (isHostHere ? (
-                    <div className="flex flex-none gap-2">
-                      <button
-                        onClick={() => handleVisitAction("confirmed")}
-                        className="rounded-full bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-800 hover:bg-teal-100"
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        onClick={() => handleVisitAction("declined")}
-                        className="rounded-full bg-black/5 px-3 py-1.5 text-xs font-semibold text-ink/60 hover:bg-black/10"
-                      >
-                        Decline
-                      </button>
-                    </div>
-                  ) : (
+                {isHostHere ? (
+                  <div className="flex flex-none gap-2">
                     <button
-                      onClick={() => handleVisitAction("requested")}
-                      className="flex-none rounded-full bg-coral-400 px-3 py-1.5 text-xs font-semibold text-white hover:bg-coral-600"
+                      onClick={() => handleVisitAction("confirmed")}
+                      className="rounded-full bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-800 hover:bg-teal-100"
                     >
-                      Book a visit
+                      Confirm
                     </button>
-                  ))}
+                    <button
+                      onClick={() => handleVisitAction("declined")}
+                      className="rounded-full bg-black/5 px-3 py-1.5 text-xs font-semibold text-ink/60 hover:bg-black/10"
+                    >
+                      Decline
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleVisitAction("requested")}
+                    className="flex-none rounded-full bg-coral-400 px-3 py-1.5 text-xs font-semibold text-white hover:bg-coral-600"
+                  >
+                    Book a visit
+                  </button>
+                )}
               </div>
 
               {visitInfo && (

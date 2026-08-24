@@ -85,6 +85,20 @@ export const api = {
       body: { paymentMethod },
       auth: true,
     }),
+
+  // payments (Razorpay)
+  createRazorpayOrder: (amount, receipt, notes) =>
+    request("/payments/create-order", {
+      method: "POST",
+      body: { amount, receipt, notes },
+      auth: true,
+    }),
+  verifyRazorpayPayment: (payload) =>
+    request("/payments/verify", {
+      method: "POST",
+      body: payload,
+      auth: true,
+    }),
 };
 
 export function saveSession(token, user) {

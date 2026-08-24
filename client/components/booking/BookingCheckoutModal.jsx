@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
+import { loadRazorpayScript } from "../../lib/razorpay";
 
 export default function BookingCheckoutModal({ property, bookingDetails, onClose }) {
   const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState("pay_on_confirmation");
+  const { user } = useAuth();
   const [specialRequests, setSpecialRequests] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -44,22 +46,70 @@ export default function BookingCheckoutModal({ property, bookingDetails, onClose
     setError("");
 
     try {
-      await api.createBooking({
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Razorpay SDK failed to load. Please check your connection.");
+      }
+
+      // Step 1: Create Razorpay Order
+      const orderRes = await api.createRazorpayOrder(totalPrice, "stay_booking", {
         propertyId: property._id,
-        checkIn,
-        checkOut,
-        guestsCount: guests,
-        specialRequests,
-        paymentMethod,
+        propertyTitle: property.title,
       });
 
-      setIsSuccess(true);
-      setTimeout(() => {
-        router.push("/trips");
-      }, 1800);
+      // Step 2: Razorpay Modal Options
+      const options = {
+        key: orderRes.keyId,
+        amount: orderRes.amount,
+        currency: orderRes.currency,
+        name: "StayInture",
+        description: property.title || "Stay Booking",
+        order_id: orderRes.id,
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+        },
+        theme: {
+          color: "#0D9488",
+        },
+        handler: async function (response) {
+          try {
+            await api.verifyRazorpayPayment({
+              razorpay_order_id: response.razorpay_order_id || orderRes.id,
+              razorpay_payment_id: response.razorpay_payment_id || `pay_${Date.now()}`,
+              razorpay_signature: response.razorpay_signature || "dev_signature",
+            });
+
+            // Payment verified -> Create booking with paid status
+            await api.createBooking({
+              propertyId: property._id,
+              checkIn,
+              checkOut,
+              guestsCount: guests,
+              specialRequests,
+              paymentMethod: "razorpay",
+            });
+
+            setIsSuccess(true);
+            setTimeout(() => {
+              router.push("/trips");
+            }, 1800);
+          } catch (verifyErr) {
+            setError(verifyErr.message || "Payment verification failed.");
+            setSubmitting(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setSubmitting(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
-      setError(err.message || "Failed to submit booking request");
-    } finally {
+      setError(err.message || "Failed to initialize Razorpay payment.");
       setSubmitting(false);
     }
   }
@@ -141,49 +191,15 @@ export default function BookingCheckoutModal({ property, bookingDetails, onClose
               />
             </div>
 
-            {/* Payment Method Selector */}
-            <div className="mb-5">
-              <label className="block text-xs font-semibold text-ink mb-2">Payment Option</label>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("pay_on_confirmation")}
-                  className={`rounded-2xl border p-3 text-left transition ${
-                    paymentMethod === "pay_on_confirmation"
-                      ? "border-teal-600 bg-teal-50/40 text-teal-900 font-semibold ring-1 ring-teal-600"
-                      : "border-black/10 hover:border-black/20 text-ink/70"
-                  }`}
-                >
-                  <p className="text-xs font-bold">Pay Later</p>
-                  <p className="text-[10px] opacity-70">On Host Confirm</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("card")}
-                  className={`rounded-2xl border p-3 text-left transition ${
-                    paymentMethod === "card"
-                      ? "border-teal-600 bg-teal-50/40 text-teal-900 font-semibold ring-1 ring-teal-600"
-                      : "border-black/10 hover:border-black/20 text-ink/70"
-                  }`}
-                >
-                  <p className="text-xs font-bold">Credit/Debit Card</p>
-                  <p className="text-[10px] opacity-70">Instant Pay</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("upi")}
-                  className={`rounded-2xl border p-3 text-left transition ${
-                    paymentMethod === "upi"
-                      ? "border-teal-600 bg-teal-50/40 text-teal-900 font-semibold ring-1 ring-teal-600"
-                      : "border-black/10 hover:border-black/20 text-ink/70"
-                  }`}
-                >
-                  <p className="text-xs font-bold">UPI / GPay</p>
-                  <p className="text-[10px] opacity-70">Instant Pay</p>
-                </button>
+            {/* Razorpay Secured Badge */}
+            <div className="mb-5 rounded-2xl bg-slate-50 border border-black/10 p-3.5 flex items-center justify-between text-xs text-ink/70">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-semibold">Razorpay Secure Checkout</span>
               </div>
+              <span className="text-[11px] text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
+                UPI / Cards / NetBanking
+              </span>
             </div>
 
             {/* Total Price Summary */}
@@ -208,7 +224,7 @@ export default function BookingCheckoutModal({ property, bookingDetails, onClose
               </div>
             </div>
 
-            {error && <p className="mb-3 text-xs font-medium text-coral-600">{error}</p>}
+            {error && <p className="mb-3 text-xs font-medium text-coral-600 bg-coral-50 p-2 rounded-lg">{error}</p>}
 
             {/* Actions */}
             <div className="flex gap-3">
@@ -223,9 +239,9 @@ export default function BookingCheckoutModal({ property, bookingDetails, onClose
                 type="button"
                 disabled={submitting}
                 onClick={handleConfirmBooking}
-                className="flex-1 rounded-2xl bg-coral-500 py-3 text-xs font-semibold text-white shadow-md hover:bg-coral-600 disabled:opacity-50"
+                className="flex-1 rounded-2xl bg-gradient-to-r from-teal-600 to-teal-700 py-3 text-xs font-bold text-white shadow-md hover:brightness-110 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
               >
-                {submitting ? "Processing..." : "Confirm & Book"}
+                {submitting ? "Processing Razorpay..." : `Pay ₹${totalPrice.toLocaleString("en-IN")} via Razorpay`}
               </button>
             </div>
           </>

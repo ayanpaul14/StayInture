@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
-import { GoogleMap, Marker, Circle, useJsApiLoader } from "@react-google-maps/api";
+import { useMemo, useState } from "react";
+import { GoogleMap, Marker, Circle, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
 
 const containerStyle = { width: "100%", height: "100%", borderRadius: "16px" };
 
-export default function MapView({ center, radiusKm, properties }) {
+export default function MapView({ center, radiusKm, properties, onBookProperty }) {
+  const [selectedProperty, setSelectedProperty] = useState(null);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -75,6 +76,7 @@ export default function MapView({ center, radiusKm, properties }) {
             key={p._id}
             position={{ lat: p.location.coordinates[1], lng: p.location.coordinates[0] }}
             title={`${p.title} — Rs${Number(p.rentPerMonth).toLocaleString("en-IN")}/mo`}
+            onClick={() => setSelectedProperty(p)}
             icon={{
               path: "M12 0C7.6 0 4 3.6 4 8c0 5.4 8 16 8 16s8-10.6 8-16c0-4.4-3.6-8-8-8z",
               fillColor: p.category === "pg" ? "#D85A30" : "#0F6E56",
@@ -85,6 +87,36 @@ export default function MapView({ center, radiusKm, properties }) {
             }}
           />
         ))}
+
+      {selectedProperty && (
+        <InfoWindow
+          position={{
+            lat: selectedProperty.location.coordinates[1],
+            lng: selectedProperty.location.coordinates[0],
+          }}
+          onCloseClick={() => setSelectedProperty(null)}
+        >
+          <div className="p-1 max-w-xs text-slate-800">
+            <h4 className="text-xs font-bold truncate">{selectedProperty.title}</h4>
+            <p className="text-[11px] text-slate-600">{selectedProperty.city}</p>
+            <p className="text-xs font-bold text-teal-800 mt-1">
+              ₹{Number(selectedProperty.rentPerMonth).toLocaleString("en-IN")}/mo
+            </p>
+            {onBookProperty && (
+              <button
+                type="button"
+                onClick={() => {
+                  onBookProperty(selectedProperty);
+                  setSelectedProperty(null);
+                }}
+                className="mt-2 w-full rounded-lg bg-teal-600 px-3 py-1 text-[11px] font-bold text-white shadow hover:bg-teal-700"
+              >
+                Book Stay Now
+              </button>
+            )}
+          </div>
+        </InfoWindow>
+      )}
     </GoogleMap>
   );
 }

@@ -89,7 +89,7 @@ export default function MyTripsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-2 border-b border-black/10 pb-3">
+      <div className="mb-6 flex gap-2 border-b border-black/10 pb-3 overflow-x-auto no-scrollbar py-1">
         <TabButton
           label="Upcoming"
           count={upcoming.length}
@@ -150,7 +150,7 @@ function TabButton({ label, count, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
+      className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${
         active
           ? "bg-teal-600 text-white shadow-sm"
           : "bg-slate-100 text-ink/70 hover:bg-slate-200"
