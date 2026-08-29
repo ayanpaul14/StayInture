@@ -25,7 +25,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-black/5 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3">
         <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
           <span className="h-7 w-7 rounded-lg bg-teal-600" />

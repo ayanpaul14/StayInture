@@ -50,11 +50,11 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl px-5 py-10">
       {/* identity header */}
-      <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+      <div className="flex items-center gap-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 p-6 shadow-2xl">
         <Avatar name={user.name} email={user.email} size={64} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="truncate font-head text-xl font-bold text-ink">
+            <h1 className="truncate font-head text-xl font-bold text-white">
               {user.name || "Add your name"}
             </h1>
             {user.isHost && (
@@ -63,7 +63,7 @@ export default function ProfilePage() {
               </span>
             )}
           </div>
-          <p className="truncate text-sm text-ink/60">{user.email}</p>
+          <p className="truncate text-sm text-white/60">{user.email}</p>
           {user.ratingCount > 0 && (
             <p className="mt-1 text-xs text-ink/50">
               ★ {user.rating?.toFixed(1)} · {user.ratingCount} review{user.ratingCount === 1 ? "" : "s"}
@@ -73,9 +73,9 @@ export default function ProfilePage() {
       </div>
 
       {/* editable account details */}
-      <div className="mt-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+      <div className="mt-6 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink">Account details</h2>
+          <h2 className="text-sm font-semibold text-white">Account details</h2>
           {!editing && (
             <button
               onClick={() => setEditing(true)}
@@ -180,8 +180,8 @@ export default function ProfilePage() {
       </div>
 
       {/* account actions */}
-      <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-        <h2 className="mb-1 text-sm font-semibold text-ink">Account</h2>
+      <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 p-6 shadow-2xl">
+        <h2 className="mb-1 text-sm font-semibold text-white">Account</h2>
         <button
           onClick={() => {
             logout();

@@ -49,7 +49,7 @@ export default function HostReservationsPage() {
   }
 
   if (!ready || loading) {
-    return <p className="mx-auto max-w-5xl px-5 py-16 text-center text-ink/50">Loading reservations...</p>;
+    return <p className="mx-auto max-w-5xl px-5 py-16 text-center text-white/50">Loading reservations...</p>;
   }
 
   const pending = reservations.filter((r) => r.status === "pending");
@@ -68,12 +68,12 @@ export default function HostReservationsPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-head text-3xl font-bold text-ink">Host Reservations</h1>
-          <p className="text-xs text-ink/60 mt-1">Review incoming booking requests and manage guest stays</p>
+          <h1 className="font-head text-3xl font-bold text-white">Host Reservations</h1>
+          <p className="text-xs text-white/60 mt-1">Review incoming booking requests and manage guest stays</p>
         </div>
         <Link
           href="/host/dashboard"
-          className="w-fit whitespace-nowrap rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-semibold text-ink/80 transition hover:bg-slate-50"
+          className="w-fit whitespace-nowrap rounded-full border border-white/20 bg-white/10 backdrop-blur px-4 py-2 text-xs font-semibold text-white/80 transition hover:bg-white/20"
         >
           ← Host Dashboard
         </Link>
@@ -98,8 +98,8 @@ export default function HostReservationsPage() {
       {error && <p className="mb-4 text-xs text-coral-600">{error}</p>}
 
       {displayReservations.length === 0 ? (
-        <div className="rounded-3xl bg-white p-12 text-center shadow-sm ring-1 ring-black/5">
-          <p className="text-sm font-medium text-ink/60">No reservations found under "{activeTab}".</p>
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-12 text-center shadow-2xl">
+          <p className="text-sm font-medium text-white/60">No reservations found under "{activeTab}".</p>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -121,15 +121,15 @@ export default function HostReservationsPage() {
 function StatCard({ label, value, tone }) {
   const toneClasses =
     tone === "amber"
-      ? "bg-amber-50 text-amber-900 border-amber-200"
+      ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
       : tone === "teal"
-      ? "bg-teal-50 text-teal-900 border-teal-200"
+      ? "bg-teal-500/20 text-teal-300 border-teal-500/30"
       : tone === "coral"
-      ? "bg-coral-50 text-coral-900 border-coral-200"
-      : "bg-slate-50 text-ink border-black/5";
+      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+      : "bg-white/10 text-white border-white/10";
 
   return (
-    <div className={`rounded-2xl border p-4 shadow-sm ${toneClasses}`}>
+    <div className={`rounded-2xl border p-4 backdrop-blur-sm shadow-sm ${toneClasses}`}>
       <p className="font-head text-xl font-bold">{value}</p>
       <p className="text-[11px] opacity-70 mt-0.5">{label}</p>
     </div>
@@ -176,7 +176,7 @@ function ReservationCard({ reservation, actionLoading, onApprove, onDecline }) {
   const totalGuests = (reservation.guestsCount?.adults || 1) + (reservation.guestsCount?.children || 0);
 
   return (
-    <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-black/5 transition hover:shadow-md">
+    <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-5 shadow-2xl transition hover:bg-white/15">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-black/5 pb-4">
         {/* Guest info */}
         <div className="flex items-center gap-3">

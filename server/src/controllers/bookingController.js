@@ -40,6 +40,9 @@ async function createBooking(req, res) {
     guestsCount = { adults: 1, children: 0, infants: 0 },
     specialRequests,
     paymentMethod = "pay_on_confirmation",
+    // Razorpay payment proof (passed after payment verification)
+    razorpay_payment_id,
+    razorpay_order_id,
   } = req.body;
 
   if (!propertyId || !checkIn || !checkOut) {
@@ -93,8 +96,8 @@ async function createBooking(req, res) {
   const securityDeposit = property.securityDeposit || 0;
   const totalPrice = basePrice + cleaningFee + serviceFee + securityDeposit;
 
-  // Determine initial payment status if paid upfront vs pay on confirmation
-  const isPaidUpfront = paymentMethod === "card" || paymentMethod === "upi";
+  // Determine payment status - razorpay means already paid via gateway
+  const isPaidUpfront = ["card", "upi", "razorpay"].includes(paymentMethod);
   const paymentStatus = isPaidUpfront ? "paid" : "unpaid";
   const status = isPaidUpfront ? "confirmed" : "pending";
 
@@ -118,7 +121,9 @@ async function createBooking(req, res) {
 
   if (isPaidUpfront) {
     bookingData.paymentDetails = {
-      transactionId: "TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+      // Use real Razorpay IDs if provided, otherwise generate a placeholder
+      transactionId: razorpay_payment_id || ("TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase()),
+      orderId: razorpay_order_id || null,
       paymentMethod,
       paidAt: new Date(),
     };

@@ -48,32 +48,32 @@ export default function SignupPage() {
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-5 py-12">
       <div className="mb-6 flex justify-center">
-        <span className="h-14 w-14 rounded-2xl bg-teal-600" />
+        <span className="h-14 w-14 rounded-2xl bg-teal-500 shadow-[0_0_32px_rgba(20,184,166,0.6)]" />
       </div>
-      <h1 className="text-center font-head text-2xl font-bold">Create your account</h1>
-      <p className="mb-6 text-center text-sm text-ink/60">
+      <h1 className="text-center font-head text-2xl font-bold text-white">Create your account</h1>
+      <p className="mb-6 text-center text-sm text-white/60">
         Join StayInture to search nearby places or list your own
       </p>
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+      <div className="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 p-6 shadow-2xl">
         {step === "details" ? (
           <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
-            <label className="text-sm font-medium text-ink/70">Your name</label>
+            <label className="text-sm font-medium text-white/70">Your name</label>
             <input
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ayan Paul"
-              className="rounded-xl border border-black/10 px-4 py-2.5 text-sm outline-none focus:border-teal-400"
+              className="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:border-teal-400 focus:bg-white/15 backdrop-blur"
             />
-            <label className="text-sm font-medium text-ink/70">Email address</label>
+            <label className="text-sm font-medium text-white/70">Email address</label>
             <input
               required
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="rounded-xl border border-black/10 px-4 py-2.5 text-sm outline-none focus:border-teal-400"
+              className="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:border-teal-400 focus:bg-white/15 backdrop-blur"
             />
             <button
               disabled={loading}
@@ -84,16 +84,16 @@ export default function SignupPage() {
           </form>
         ) : (
           <form onSubmit={handleVerify} className="flex flex-col gap-3">
-            <p className="text-xs text-ink/50">
+            <p className="text-xs text-white/50">
               OTP sent to {email} — check your inbox (and spam folder)
             </p>
-            <label className="text-sm font-medium text-ink/70">Enter OTP</label>
+            <label className="text-sm font-medium text-white/70">Enter OTP</label>
             <input
               required
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="6-digit code"
-              className="rounded-xl border border-black/10 px-4 py-2.5 text-sm tracking-widest outline-none focus:border-teal-400"
+              className="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/40 tracking-widest outline-none focus:border-teal-400 focus:bg-white/15 backdrop-blur"
             />
             <button
               disabled={loading}
@@ -104,7 +104,7 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => setStep("details")}
-              className="text-xs text-ink/50 hover:text-ink"
+              className="text-xs text-white/50 hover:text-white"
             >
               Wrong email? Go back
             </button>
@@ -113,9 +113,9 @@ export default function SignupPage() {
         {error && <p className="mt-3 text-xs text-coral-600">{error}</p>}
       </div>
 
-      <p className="mt-4 text-center text-xs text-ink/50">
+      <p className="mt-4 text-center text-xs text-white/50">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-teal-600 hover:underline">
+        <Link href="/login" className="font-semibold text-teal-400 hover:underline">
           Log in
         </Link>
       </p>

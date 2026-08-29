@@ -77,8 +77,8 @@ export default function MyTripsPage() {
     <div className="mx-auto max-w-5xl px-5 py-8">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-head text-3xl font-bold text-ink">My Trips</h1>
-          <p className="text-xs text-ink/60 mt-1">Manage your reservations and trip history</p>
+          <h1 className="font-head text-3xl font-bold text-white">My Trips</h1>
+          <p className="text-xs text-white/60 mt-1">Manage your reservations and trip history</p>
         </div>
         <Link
           href="/explore"
@@ -113,9 +113,9 @@ export default function MyTripsPage() {
       {error && <p className="mb-4 text-xs text-coral-600">{error}</p>}
 
       {displayBookings.length === 0 ? (
-        <div className="rounded-3xl bg-white p-12 text-center shadow-sm ring-1 ring-black/5">
-          <p className="text-sm font-medium text-ink/60">No {activeTab} trips found.</p>
-          <p className="text-xs text-ink/40 mt-1">When you book a stay, your reservations will show up here.</p>
+        <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-12 text-center shadow-2xl">
+          <p className="text-sm font-medium text-white/60">No {activeTab} trips found.</p>
+          <p className="text-xs text-white/40 mt-1">When you book a stay, your reservations will show up here.</p>
           <Link
             href="/explore"
             className="mt-4 inline-block rounded-2xl bg-teal-50 px-4 py-2 text-xs font-semibold text-teal-800 transition hover:bg-teal-100"
@@ -291,7 +291,7 @@ function StatusBadge({ status, paymentStatus }) {
 
 function ReceiptModal({ booking, onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
         <button
           onClick={onClose}

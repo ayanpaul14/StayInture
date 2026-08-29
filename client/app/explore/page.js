@@ -89,10 +89,10 @@ function ExploreContent() {
         transition={{ duration: 0.5 }}
         className="mb-6 sm:mb-8"
       >
-        <h1 className="font-head text-2xl font-bold tracking-tight text-ink sm:text-3xl sm:text-4xl">
+        <h1 className="font-head text-2xl font-bold tracking-tight text-white sm:text-3xl sm:text-4xl">
           Find a place to call home.
         </h1>
-        <p className="mt-2 text-sm text-ink/60 sm:text-[15px]">
+        <p className="mt-2 text-sm text-white/60 sm:text-[15px]">
           Flat, Bungalow or PG — sorted by what&rsquo;s nearest to you.
         </p>
       </motion.section>
@@ -110,7 +110,7 @@ function ExploreContent() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="static z-10 mb-5 flex flex-col gap-3 rounded-2xl border border-black/5 bg-white/90 p-3.5 shadow-[0_8px_24px_-12px_rgba(20,40,36,0.18)] backdrop-blur sm:sticky sm:top-[72px] sm:mb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4"
+        className="static z-10 mb-5 flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 p-3.5 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:sticky sm:top-[72px] sm:mb-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4"
       >
         <CategoryChips value={category} onChange={setCategory} />
         <div className="flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4">

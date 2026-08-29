@@ -1,17 +1,18 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
-// Razorpay test credentials fallback if .env keys are not provided
-const KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_stayinture";
-const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "dev_secret_stayinture";
+// Initialize Razorpay with real credentials from .env
+const KEY_ID = process.env.RAZORPAY_KEY_ID;
+const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 
-let razorpayInstance = null;
-if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
-  razorpayInstance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
+if (!KEY_ID || !KEY_SECRET) {
+  console.warn("[Payment] WARNING: RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET not set in .env");
 }
+
+const razorpayInstance = new Razorpay({
+  key_id: KEY_ID || "missing_key",
+  key_secret: KEY_SECRET || "missing_secret",
+});
 
 // POST /api/payments/create-order   { amount, receipt, notes }
 async function createOrder(req, res) {
@@ -22,35 +23,27 @@ async function createOrder(req, res) {
 
   const amountInPaise = Math.round(Number(amount) * 100);
 
-  if (razorpayInstance) {
-    try {
-      const order = await razorpayInstance.orders.create({
-        amount: amountInPaise,
-        currency: "INR",
-        receipt: receipt || `rcpt_${Date.now()}`,
-        notes: notes || {},
-      });
-      return res.json({
-        id: order.id,
-        amount: order.amount,
-        currency: order.currency,
-        keyId: KEY_ID,
-      });
-    } catch (err) {
-      console.error("Razorpay order error:", err);
-      return res.status(500).json({ message: err.message || "Failed to create Razorpay order" });
-    }
+  if (!KEY_ID) {
+    return res.status(500).json({ message: "Razorpay not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env" });
   }
 
-  // Development mode fallback order object
-  const dummyOrderId = `order_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-  res.json({
-    id: dummyOrderId,
-    amount: amountInPaise,
-    currency: "INR",
-    keyId: KEY_ID,
-    isDevMode: true,
-  });
+  try {
+    const order = await razorpayInstance.orders.create({
+      amount: amountInPaise,
+      currency: "INR",
+      receipt: receipt || `rcpt_${Date.now()}`,
+      notes: notes || {},
+    });
+    return res.json({
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: KEY_ID,
+    });
+  } catch (err) {
+    console.error("Razorpay order error:", err);
+    return res.status(500).json({ message: err.message || "Failed to create Razorpay order" });
+  }
 }
 
 // POST /api/payments/verify   { razorpay_order_id, razorpay_payment_id, razorpay_signature }

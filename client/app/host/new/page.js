@@ -192,8 +192,8 @@ export default function ListPropertyPage() {
     <div className="mx-auto max-w-2xl px-5 py-10">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-head text-2xl font-bold text-ink">List your property</h1>
-          <p className="text-xs sm:text-sm text-ink/60 mt-0.5">
+          <h1 className="font-head text-2xl font-bold text-white">List your property</h1>
+          <p className="text-xs sm:text-sm text-white/60 mt-0.5">
             Fill in stay details, add photos, and pay the ₹{listingFee} listing fee to go live.
           </p>
         </div>
@@ -202,10 +202,10 @@ export default function ListPropertyPage() {
         </span>
       </div>
 
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 rounded-3xl bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-4 sm:p-6 shadow-2xl">
         {/* Category selector */}
         <div>
-          <label className="block text-xs font-bold uppercase text-ink/50 mb-2">Category</label>
+          <label className="block text-xs font-bold uppercase text-white/50 mb-2">Category</label>
           <div className="flex flex-wrap gap-2">
             {["flat", "bungalow", "pg"].map((c) => (
               <button
@@ -367,7 +367,7 @@ export default function ListPropertyPage() {
 
       {/* Host Listing Fee Payment Modal */}
       {showPaymentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="relative w-full max-w-md rounded-3xl bg-white p-5 sm:p-6 shadow-2xl my-8">
             <button
               onClick={() => setShowPaymentModal(false)}
@@ -427,11 +427,11 @@ export default function ListPropertyPage() {
 }
 
 const inputCls =
-  "rounded-xl border border-black/10 px-4 py-2.5 text-sm outline-none focus:border-teal-400 w-full";
+  "rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none focus:border-teal-400 focus:bg-white/15 backdrop-blur w-full";
 
 function Field({ label, children }) {
   return (
-    <label className="flex flex-col gap-1 text-sm font-medium text-ink/70">
+    <label className="flex flex-col gap-1 text-sm font-medium text-white/70">
       {label}
       {children}
     </label>

@@ -27,6 +27,7 @@ export default function QuickBookingModal({ property, onClose }) {
   const [specialRequests, setSpecialRequests] = useState("");
   const [bookedRanges, setBookedRanges] = useState([]);
   const [availabilityError, setAvailabilityError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("pay_on_confirmation");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -133,7 +134,7 @@ export default function QuickBookingModal({ property, onClose }) {
               razorpay_signature: response.razorpay_signature || "dev_signature",
             });
 
-            // Payment verified -> Create booking with paid status
+            // Payment verified -> Create booking with paid/confirmed status
             if (property._id && !property._id.startsWith("demo-")) {
               await api.createBooking({
                 propertyId: property._id,
@@ -142,6 +143,9 @@ export default function QuickBookingModal({ property, onClose }) {
                 guestsCount: guests,
                 specialRequests,
                 paymentMethod: "razorpay",
+                // Pass real Razorpay IDs so the booking is marked paid + confirmed
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id || orderRes.id,
               });
             }
 
@@ -183,7 +187,7 @@ export default function QuickBookingModal({ property, onClose }) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="relative w-full max-w-xl rounded-3xl bg-white p-6 shadow-2xl transition-all my-8">
         {/* Close Button */}
         <button

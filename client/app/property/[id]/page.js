@@ -80,8 +80,8 @@ export default function PropertyDetailPage() {
         <span className="mb-1 inline-block rounded-full bg-teal-50 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-teal-800">
           {property.category}
         </span>
-        <h1 className="font-head text-3xl font-bold text-ink">{property.title}</h1>
-        <p className="mt-1 text-sm text-ink/60">{property.address}, {property.city}</p>
+        <h1 className="font-head text-3xl font-bold text-white">{property.title}</h1>
+        <p className="mt-1 text-sm text-white/60">{property.address}, {property.city}</p>
 
         <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium">
           {property.bedrooms && (
@@ -99,15 +99,15 @@ export default function PropertyDetailPage() {
         </div>
 
         {property.description && (
-          <div className="mt-6 border-t border-black/5 pt-6">
-            <h2 className="text-base font-bold text-ink mb-2">About this space</h2>
-            <p className="text-sm leading-relaxed text-ink/70">{property.description}</p>
+          <div className="mt-6 border-t border-white/10 pt-6">
+            <h2 className="text-base font-bold text-white mb-2">About this space</h2>
+            <p className="text-sm leading-relaxed text-white/70">{property.description}</p>
           </div>
         )}
 
         {property.amenities?.length > 0 && (
-          <div className="mt-6 border-t border-black/5 pt-6">
-            <h2 className="mb-3 text-base font-bold text-ink">What this place offers</h2>
+          <div className="mt-6 border-t border-white/10 pt-6">
+            <h2 className="mb-3 text-base font-bold text-white">What this place offers</h2>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {property.amenities.map((a) => (
                 <div key={a} className="flex items-center gap-2 rounded-2xl bg-teal-50/60 px-3.5 py-2 text-xs font-semibold text-teal-900">
@@ -120,12 +120,12 @@ export default function PropertyDetailPage() {
         )}
 
         {/* Collapsible Contact Host Section */}
-        <div className="mt-8 rounded-2xl border border-black/10 bg-slate-50/50 p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-ink">Have questions for the host?</h3>
-              <p className="text-xs text-ink/50">Send a direct message before booking</p>
-            </div>
+          <div className="mt-8 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-white">Have questions for the host?</h3>
+                <p className="text-xs text-white/50">Send a direct message before booking</p>
+              </div>
             <button
               onClick={() => setShowContactHost((v) => !v)}
               className="rounded-xl bg-white border border-black/10 px-3 py-1.5 text-xs font-semibold text-ink/70 hover:bg-slate-100"
